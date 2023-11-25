@@ -1,0 +1,65 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "dart run orm"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model usuarios{
+  id Int @id @default(autoincrement())
+  nombre String
+  apellido String
+  cedula String
+  correo String @unique
+  contrasena String
+  rol String 
+}
+
+model establecimientos{
+  id Int @id @default(autoincrement())
+  nombre String
+  direccion String
+  ciudad String
+  imagen String
+  horario String
+}
+
+model especialistas{
+  id Int @id @default(autoincrement())
+  nombre String
+  apellido String
+  telefono String
+  imagen String
+  horario String
+}
+
+model empleados{
+  id Int @id @default(autoincrement())
+  idEstablecimiento Int
+  nombre String
+  apellido String
+  imagen String
+  horario String
+}
+
+model agendaEspecialista{
+  id Int @id @default(autoincrement())
+  idEspecialista Int
+  idUsuario Int
+  fecha String
+  hora String
+  lugar String
+}
+
+model agendaEmpleados{
+  id Int @id @default(autoincrement())
+  idempleado Int
+  idUsuario Int
+  fecha String
+  hora String
+}
