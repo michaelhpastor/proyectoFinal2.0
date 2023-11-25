@@ -7,8 +7,8 @@ import 'package:dart_frog/dart_frog.dart';
 Future<Response> onRequest(RequestContext context) {
   var mt = context.request.method.value;
   return switch(context.request.method){
-    HttpMethod.get => _getEmpelado(context),
-    HttpMethod.post => _createEmpleado(context),
+    HttpMethod.post => _getEmpelado(context),
+    HttpMethod.put => _createEmpleado(context),
     HttpMethod.delete => _borrarEmpleado(context),
     //HttpMethod.put => _actualizarEspecialista(context),
     _ => Future.value(Response(body: 'esto es un metodo $mt'))

@@ -27,8 +27,7 @@ class _IngresoUsuariosState extends State<ingreso_usuarios> {
     Map<String, dynamic> authJson = auth.tojason();
 
     var js = json.encode(authJson);
-
-    var url = Uri.http("localhost:8080", '/auth');
+    var url = Uri.http("localhost:8080", '/users');
     var response = await http.post(url, body: js);
 
     if (response.statusCode == 200) {

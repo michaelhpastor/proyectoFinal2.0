@@ -1,6 +1,11 @@
 // ignore_for_file: camel_case_types, library_private_types_in_public_api, prefer_const_constructors
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:frontend/layout/layout.dart';
+import 'package:http/http.dart' as http;
+import 'package:frontend/model/usuario.dart';
 
 class registro_usuarios extends StatefulWidget {
   const registro_usuarios({Key? key}) : super(key: key);
@@ -16,6 +21,25 @@ class _RegistroUsuariosState extends State<registro_usuarios> {
   TextEditingController cedula = TextEditingController();
   TextEditingController correo = TextEditingController();
   TextEditingController contrasena = TextEditingController();
+
+
+Future creaeUsuario() async {
+  
+  var url = Uri.http("localhost:8080", '/users');
+
+  Usuario temp = Usuario(nombre: nombres.value.text, apellido: apellidos.value.text, cedula: cedula.value.text, correo: correo.value.text, contrasena: contrasena.value.text); 
+  Map<String, dynamic> usrjson = temp.toJson(); 
+  var response = await http.post(url, body: usrjson);
+
+  var nojson = json.decode(response.body);
+  if(nojson['mensaje']== 'guardado!'){
+
+  }else{
+    if(nojson['mensaje']== 'Este correo ya esta registrado'){
+      
+    }
+  }
+}
 
   @override
   Widget build(BuildContext context) {
