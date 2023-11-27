@@ -161,7 +161,7 @@ class _EleccionServicioState extends State<EleccionServicio> {
                               Padding(
                                 padding: const EdgeInsets.only(top: 30),
                                 child: Text(
-                                  "Profesinal",
+                                  "Profesional",
                                   style: TextStyle(
                                       fontFamily: 'Poppins',
                                       fontSize: 16,
@@ -255,7 +255,8 @@ class _EleccionServicioState extends State<EleccionServicio> {
                         if (_isSelected == true) {
                           Navigator.pushNamed(context, '/ingreso');
                         } else if (_isSelected2 == true) {
-                          Navigator.pushNamed(context, '/servicio');
+                          Navigator.pushNamed(
+                              context, '/lista_establecimientos');
                         }
                       },
                       child: Container(

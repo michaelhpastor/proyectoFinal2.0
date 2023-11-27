@@ -1,6 +1,7 @@
 // ignore_for_file: camel_case_types, library_private_types_in_public_api, prefer_typing_uninitialized_variables, prefer_const_constructors, sized_box_for_whitespace, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
+import 'package:frontend/layout/lista_empleados.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -12,11 +13,12 @@ class ListaEstablecimientos extends StatefulWidget {
 }
 
 class Establecimiento {
-  final String id;
+  final int id;
   final String nombre;
   final String direccion;
   final String ciudad;
   final String imagen;
+  final String horario;
 
   Establecimiento({
     required this.id,
@@ -24,25 +26,34 @@ class Establecimiento {
     required this.direccion,
     required this.ciudad,
     required this.imagen,
+    required this.horario,
   });
 }
 
 class _ListaEstablecimientosState extends State<ListaEstablecimientos> {
   Future get_establecimientos() async {
-    var url = Uri.http("192.168.0.10", 'analista_vial.php', {'q': '{http}'});
+    var url = Uri.https(
+        "flaskprueba-fb9845ade83c.herokuapp.com", '/establecimientos');
     final response = await http.get(url);
     var responseData = json.decode(response.body);
+
+    print("VALOR DE LA DATA");
+    print(responseData);
 
     List<Establecimiento> establecimientos = [];
     for (var singleUser in responseData) {
       Establecimiento establecimiento = Establecimiento(
-          id: singleUser["id"],
-          nombre: singleUser["nombre"],
-          direccion: singleUser["direccion"],
-          ciudad: singleUser["ciudad"],
-          imagen: singleUser["imagen"]);
+        id: singleUser['id'],
+        nombre: singleUser['nombre'],
+        direccion: singleUser['direccion'],
+        ciudad: singleUser['ciudad'],
+        imagen: singleUser['imagen'],
+        horario: singleUser['horario'],
+      );
+
       establecimientos.add(establecimiento);
     }
+
     return establecimientos;
   }
 
@@ -137,16 +148,16 @@ class _ListaEstablecimientosState extends State<ListaEstablecimientos> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Padding(
-              padding: EdgeInsets.only(top: 70),
+              padding: EdgeInsets.only(top: 70, bottom: 40),
               child: Text('Selecciona el establecimiento:',
                   style: TextStyle(
                       fontFamily: 'Poppins',
                       fontSize: 20,
-                      fontWeight: FontWeight.w700,
+                      fontWeight: FontWeight.bold,
                       color: Color(0xff393839))),
             ),
             Container(
-              height: 400,
+              height: 700,
               child: FutureBuilder(
                   future: get_establecimientos(),
                   builder: (BuildContext ctx, AsyncSnapshot snapshot) {
@@ -154,24 +165,101 @@ class _ListaEstablecimientosState extends State<ListaEstablecimientos> {
                       return ListView.builder(
                         itemCount: snapshot.data.length,
                         itemBuilder: (BuildContext context, int index) {
-                          return Column(
-                            children: [
-                              Text(snapshot.data[index].id),
-                              Text(snapshot.data[index].nombre),
-                              Text(snapshot.data[index].direccion),
-                              Text(snapshot.data[index].ciudad),
-                              Text(snapshot.data[index].imagen),
-                            ],
+                          return InkWell(
+                            onTap: () {
+                              _navigateToDetalleEstablecimiento(
+                                  snapshot.data[index]);
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 600, right: 600, bottom: 50),
+                              child: Container(
+                                  child: Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        width: 200,
+                                        height: 150,
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                          child: Image.network(
+                                            snapshot.data[index].imagen,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 50),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(snapshot.data[index].id
+                                                .toString()),
+                                            Text(snapshot.data[index].nombre,
+                                                style: TextStyle(
+                                                    fontFamily: 'Poppins',
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w400,
+                                                    color: Color(0xff393839))),
+                                            Text(snapshot.data[index].direccion,
+                                                style: TextStyle(
+                                                    fontFamily: 'Poppins',
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w400,
+                                                    color: Color(0xff393839))),
+                                            Text(snapshot.data[index].ciudad,
+                                                style: TextStyle(
+                                                    fontFamily: 'Poppins',
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w400,
+                                                    color: Color(0xff393839))),
+                                            Text(snapshot.data[index].horario,
+                                                style: TextStyle(
+                                                    fontFamily: 'Poppins',
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w400,
+                                                    color: Color(0xff393839))),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 30),
+                                    child: Container(
+                                      color: Colors.black,
+                                      width: 800,
+                                      height: 1,
+                                    ),
+                                  ),
+                                ],
+                              )),
+                            ),
                           );
                         },
                       );
                     } else {
-                      return CircularProgressIndicator();
+                      return Text("no entro xd");
                     }
                   }),
             )
           ],
         ),
+      ),
+    );
+  }
+
+  void _navigateToDetalleEstablecimiento(Establecimiento id_establecimiento) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) =>
+            ListaEmpleados(establecimiento: id_establecimiento),
       ),
     );
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/layout/eleccion_servicio.dart';
 import 'package:frontend/layout/layout.dart';
+import 'package:frontend/layout/lista_establecimientos.dart';
 
 //todo widget tiene un metodo build, los widget son CLASES
 //que sea el padre la const
@@ -15,7 +16,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: '/', // Definir la ruta inicial
+      initialRoute: '/lista_establecimientos', // Definir la ruta inicial
       routes: {
         '/': (BuildContext context) => const pagina_principal(),
         '/ingreso': (BuildContext context) => const ingreso_usuarios(),
@@ -23,7 +24,8 @@ class MyApp extends StatelessWidget {
         '/nosotros': (BuildContext context) => const acerca_de_nosotros(),
         '/cliente': (BuildContext context) => const usuarios(),
         '/profesional': (BuildContext context) => const profesionales(),
-        '/servicio': (BuildContext context) => const agenda_servicio(),
+        '/lista_establecimientos': (BuildContext context) =>
+            const ListaEstablecimientos(),
         '/eleccion_servicio': (BuildContext context) =>
             const EleccionServicio(),
         '/agenda_profesional': (BuildContext context) =>

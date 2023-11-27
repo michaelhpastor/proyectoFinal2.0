@@ -1,15 +1,17 @@
 // ignore_for_file: camel_case_types, library_private_types_in_public_api, prefer_typing_uninitialized_variables, prefer_const_constructors, sized_box_for_whitespace
 
 import 'package:flutter/material.dart';
+import 'package:frontend/layout/lista_empleados.dart';
 
-class agenda_servicio extends StatefulWidget {
-  const agenda_servicio({Key? key}) : super(key: key);
+class AgendaServicio extends StatefulWidget {
+  final Empleado empleado;
+  const AgendaServicio({Key? key, required this.empleado}) : super(key: key);
 
   @override
   _AgendaServicioState createState() => _AgendaServicioState();
 }
 
-class _AgendaServicioState extends State<agenda_servicio> {
+class _AgendaServicioState extends State<AgendaServicio> {
   TextEditingController fecha = TextEditingController();
   TextEditingController hora = TextEditingController();
   String? selectedService = ''; // Para almacenar el servicio seleccionado

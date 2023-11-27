@@ -3,62 +3,47 @@ import 'dart:io';
 import 'package:appweb/empelado_repository.dart';
 import 'package:dart_frog/dart_frog.dart';
 
-
 Future<Response> onRequest(RequestContext context) {
   var mt = context.request.method.value;
-  return switch(context.request.method){
-    HttpMethod.get => _getEmpelado(context),
-    HttpMethod.post => _createEmpleado(context),
+  return switch (context.request.method) {
+    HttpMethod.post => _getEmpelado(context),
+    HttpMethod.put => _createEmpleado(context),
     HttpMethod.delete => _borrarEmpleado(context),
     //HttpMethod.put => _actualizarEspecialista(context),
     _ => Future.value(Response(body: 'esto es un metodo $mt'))
   };
 }
 
-Future<Response> _getEmpelado(RequestContext context) async{
-  final json = (await context.request.json()) as Map<String,dynamic>;
+Future<Response> _getEmpelado(RequestContext context) async {
+  final json = (await context.request.json()) as Map<String, dynamic>;
   final id = json['id'] as int;
 
   final repo = context.read<repositorioEmpelado>();
   final empleado = await repo.getAll(id);
 
-  return Future.value(Response.json(
-    body: empleado
-    )
-  );
+  return Future.value(Response.json(body: empleado));
 }
 
 Future<Response> _borrarEmpleado(RequestContext context) async {
-
-  final json = (await context.request.json()) as Map<String,dynamic>;
+  final json = (await context.request.json()) as Map<String, dynamic>;
   final id = json['id'] as int;
-
-
-
 
   final repo = context.read<repositorioEmpelado>();
 
   var _er = await repo.ifExist(id: id);
 
-  if(_er == null){
-  return Response.json(
-    body: {
-      'mensaje' : 'Este usuario no existe'
-    }
-  );
-  }else{
-  await repo.deleteEmpelado(id: id);
-  return Response.json(
-    body: {
-      'mensaje' : 'empleado borrado',
-    }
-  );
+  if (_er == null) {
+    return Response.json(body: {'mensaje': 'Este usuario no existe'});
+  } else {
+    await repo.deleteEmpelado(id: id);
+    return Response.json(body: {
+      'mensaje': 'empleado borrado',
+    });
   }
-  
 }
 
-Future<Response> _createEmpleado(RequestContext context) async{
-  final json = (await context.request.json()) as Map<String,dynamic>;
+Future<Response> _createEmpleado(RequestContext context) async {
+  final json = (await context.request.json()) as Map<String, dynamic>;
   final id = json['id'] as int;
   final idEstablecimiento = json['idEstablecimiento'] as int;
   final nombre = json['nombre'].toString();
@@ -67,39 +52,33 @@ Future<Response> _createEmpleado(RequestContext context) async{
   final telefono = json['telefono'].toString();
   final horario = json['horario'].toString();
 
-
   // ignore: lines_longer_than_80_chars
-  if(nombre == '' || apellido == '' || imagen == '' || telefono == '' || horario == ''){
+  if (nombre == '' ||
+      apellido == '' ||
+      imagen == '' ||
+      telefono == '' ||
+      horario == '') {
     return Response.json(
-      body: {
-        'mensaje' : 'llena todos los campos para crear especialista'
-      },
-      statusCode: HttpStatus.badRequest
-    );
+        body: {'mensaje': 'llena todos los campos para crear especialista'},
+        statusCode: HttpStatus.badRequest);
   }
-
-
 
   final repo = context.read<repositorioEmpelado>();
 
   var _er = await repo.ifExist(id: id);
 
-  if(_er == null){
-    final empleado = await repo.crearEmpleado(idEstablecimiento: idEstablecimiento, nombre: nombre, apellido: apellido, telefono: telefono, imagen: imagen, horario: horario);
-    return Response.json(
-    body: {
-      'mensaje' : 'guardado!',
-      'user': empleado
-    }
-  );
-  }else{
-    return Response.json(
-    body: {
-      'mensaje' : 'Este empleado ya esta registrado'
-    }
-  );
+  if (_er == null) {
+    final empleado = await repo.crearEmpleado(
+        idEstablecimiento: idEstablecimiento,
+        nombre: nombre,
+        apellido: apellido,
+        telefono: telefono,
+        imagen: imagen,
+        horario: horario);
+    return Response.json(body: {'mensaje': 'guardado!', 'user': empleado});
+  } else {
+    return Response.json(body: {'mensaje': 'Este empleado ya esta registrado'});
   }
-
 }
 
 /*

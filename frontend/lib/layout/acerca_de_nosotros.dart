@@ -95,7 +95,7 @@ class acerca_de_nosotros extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Padding(
+            Padding(  
               padding: EdgeInsets.only(top: 70),
               child: Text('Acerca de Just One Click',
                   style: TextStyle(

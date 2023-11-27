@@ -4,7 +4,7 @@ class Autentificar{
 
   Autentificar({required this.correo, required this.contrasena});
 
-  Map<String, dynamic> tojason(){
+  Map<String, dynamic> tojson(){
     return {
       'correo': correo,
       'contrasena': contrasena

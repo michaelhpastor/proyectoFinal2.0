@@ -2,7 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:frontend/layout/eleccion_servicio.dart';
-import 'package:frontend/model/auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -14,6 +15,7 @@ class ingreso_usuarios extends StatefulWidget {
 }
 
 class _IngresoUsuariosState extends State<ingreso_usuarios> {
+  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   bool obscureText = true;
   bool esCliente = false;
   bool esProfesional = false;
@@ -22,31 +24,38 @@ class _IngresoUsuariosState extends State<ingreso_usuarios> {
   TextEditingController contrasena = TextEditingController();
 
   Future login() async {
+    final url = 'https://flaskprueba-fb9845ade83c.herokuapp.com/auth';
+    final headers = {
+      "Content-Type": "application/json",
+    };
 
-    Autentificar auth = Autentificar(correo: correo.text, contrasena: contrasena.text);
-    Map<String, dynamic> authJson = auth.tojason();
+    final body = json.encode({
+      "correo": correo.text,
+      "contrasena": contrasena.text,
+    });
 
-    var js = json.encode(authJson);
+    final response = await http.post(
+      Uri.parse(url),
+      headers: headers,
+      body: body,
+    );
 
-    var url = Uri.http("localhost:8080", '/auth');
-    var response = await http.post(url, body: js);
+    var data = json.decode(response.body);
 
-    if (response.statusCode == 200) {
-      try {
-        var data = json.decode(response.body);
-        print("VALOR DATA:");
-        print(data['user']);
-
-        if (data['user'] == "usuario") {
-          print("gg");
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => EleccionServicio()));
-        } else if (data == "administrador") {}
-      } catch (e) {
-        print("Error al decodificar JSON: $e");
-      }
+    if (data['id'] > 0) {
+      Fluttertoast.showToast(
+          msg: '¡ Sesión iniciada correctamente !',
+          backgroundColor: Colors.green,
+          textColor: Colors.white,
+          toastLength: Toast.LENGTH_SHORT);
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => EleccionServicio()));
     } else {
-      print("Error en la solicitud HTTP: ${response.statusCode}");
+      Fluttertoast.showToast(
+          msg: '¡ Usuario no encontrado  !',
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          toastLength: Toast.LENGTH_SHORT);
     }
   }
 
