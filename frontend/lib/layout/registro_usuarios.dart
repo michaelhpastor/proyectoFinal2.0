@@ -22,13 +22,13 @@ class _RegistroUsuariosState extends State<registro_usuarios> {
   TextEditingController correo = TextEditingController();
   TextEditingController contrasena = TextEditingController();
 
-  Future creaeUsuario() async {
+/*   Future creaeUsuario() async {
     var url = Uri.http("localhost:8080", '/users');
 
     Usuario temp = Usuario(
-        nombre: nombres.text,
-        apellido: apellidos.text,
-        cedula: cedula.text,
+        'nombre': nombres.text,
+        'apellido': apellidos.text,
+        'cedula': cedula.text,
         correo: correo.text,
         contrasena: contrasena.text);
     Map<String, dynamic> usrjson = temp.toJson();
@@ -43,7 +43,7 @@ class _RegistroUsuariosState extends State<registro_usuarios> {
         print("El correo ya existe");
       }
     }
-  }
+  } */
 
   @override
   Widget build(BuildContext context) {
@@ -330,7 +330,7 @@ class _RegistroUsuariosState extends State<registro_usuarios> {
                         padding: const EdgeInsets.only(top: 80),
                         child: GestureDetector(
                           onTap: () {
-                            creaeUsuario();
+                            //creaeUsuario();
                           },
                           child: Container(
                               height: 60,
