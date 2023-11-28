@@ -1,12 +1,17 @@
 // ignore_for_file: camel_case_types, library_private_types_in_public_api, prefer_typing_uninitialized_variables, prefer_const_constructors, sized_box_for_whitespace, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:frontend/layout/eleccion_agenda.dart';
+import 'package:frontend/layout/ingreso_usuarios.dart';
 import 'package:frontend/layout/lista_empleados.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class ListaEstablecimientos extends StatefulWidget {
-  const ListaEstablecimientos({Key? key}) : super(key: key);
+  final id_usuario;
+  const ListaEstablecimientos({Key? key, required this.id_usuario})
+      : super(key: key);
 
   @override
   _ListaEstablecimientosState createState() => _ListaEstablecimientosState();
@@ -37,9 +42,6 @@ class _ListaEstablecimientosState extends State<ListaEstablecimientos> {
     final response = await http.get(url);
     var responseData = json.decode(response.body);
 
-    print("VALOR DE LA DATA");
-    print(responseData);
-
     List<Establecimiento> establecimientos = [];
     for (var singleUser in responseData) {
       Establecimiento establecimiento = Establecimiento(
@@ -59,6 +61,8 @@ class _ListaEstablecimientosState extends State<ListaEstablecimientos> {
 
   @override
   Widget build(BuildContext context) {
+    print("VALOR ID USUARIO EN ESTABLECIMIENTOS");
+    print(widget.id_usuario);
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 100,
@@ -80,11 +84,16 @@ class _ListaEstablecimientosState extends State<ListaEstablecimientos> {
         actions: [
           TextButton(
             onPressed: () {
-              // Acción cuando se presiona "Home"
-              Navigator.pushNamed(context, '/');
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => EleccionAgenda(
+                          id_usuario: widget.id_usuario,
+                        )),
+              );
             },
             child: const Text(
-              'Home',
+              'Mis reservas',
               style: TextStyle(
                   fontFamily: 'Poppins',
                   fontWeight: FontWeight.w500,
@@ -93,14 +102,21 @@ class _ListaEstablecimientosState extends State<ListaEstablecimientos> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 30),
+            padding: const EdgeInsets.only(left: 30, right: 150),
             child: TextButton(
               onPressed: () {
-                // Acción cuando se presiona "Acerca de Nosotros"
-                Navigator.pushNamed(context, '/nosotros');
+                Fluttertoast.showToast(
+                    msg: '¡ Sesión cerrada exitosamente !',
+                    backgroundColor: Colors.green,
+                    textColor: Colors.white,
+                    toastLength: Toast.LENGTH_LONG);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => IngresoUsuarios()),
+                );
               },
               child: const Text(
-                'Acerca de Nosotros',
+                'Cerrar sesión',
                 style: TextStyle(
                     fontFamily: 'Poppins',
                     fontWeight: FontWeight.w500,
@@ -109,38 +125,6 @@ class _ListaEstablecimientosState extends State<ListaEstablecimientos> {
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(left: 30),
-            child: TextButton(
-              onPressed: () {
-                // Acción cuando se presiona "Iniciar Sesión"
-                Navigator.pushNamed(context, '/ingreso');
-              },
-              child: const Text('Iniciar Sesión',
-                  style: TextStyle(
-                      fontFamily: 'Poppins',
-                      fontWeight: FontWeight.w500,
-                      color: Colors.black,
-                      fontSize: 16)),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 30, right: 100),
-            child: TextButton(
-              onPressed: () {
-                // Acción cuando se presiona "Registrarse"
-                Navigator.pushNamed(context, '/registro');
-              },
-              child: const Text(
-                'Registrarse',
-                style: TextStyle(
-                    fontFamily: 'Poppins',
-                    fontWeight: FontWeight.w500,
-                    color: Colors.black,
-                    fontSize: 16),
-              ),
-            ),
-          )
         ],
       ),
       body: Center(
@@ -198,8 +182,6 @@ class _ListaEstablecimientosState extends State<ListaEstablecimientos> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            Text(snapshot.data[index].id
-                                                .toString()),
                                             Text(snapshot.data[index].nombre,
                                                 style: TextStyle(
                                                     fontFamily: 'Poppins',
@@ -244,7 +226,10 @@ class _ListaEstablecimientosState extends State<ListaEstablecimientos> {
                         },
                       );
                     } else {
-                      return Text("no entro xd");
+                      return Transform.scale(
+                        scale: 0.3,
+                        child: CircularProgressIndicator(),
+                      );
                     }
                   }),
             )
@@ -258,8 +243,8 @@ class _ListaEstablecimientosState extends State<ListaEstablecimientos> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) =>
-            ListaEmpleados(establecimiento: id_establecimiento),
+        builder: (context) => ListaEmpleados(
+            establecimiento: id_establecimiento, id_usuario: widget.id_usuario),
       ),
     );
   }

@@ -3,6 +3,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:frontend/layout/ingreso_usuarios.dart';
 import 'package:http/http.dart' as http;
 import 'package:frontend/model/usuario.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -22,28 +23,59 @@ class _RegistroUsuariosState extends State<registro_usuarios> {
   TextEditingController correo = TextEditingController();
   TextEditingController contrasena = TextEditingController();
 
-/*   Future creaeUsuario() async {
-    var url = Uri.http("localhost:8080", '/users');
+  Future crearUsuario() async {
+    final url = 'https://flaskprueba-fb9845ade83c.herokuapp.com/users';
+    final headers = {
+      "Content-Type": "application/json",
+    };
 
-    Usuario temp = Usuario(
-        'nombre': nombres.text,
-        'apellido': apellidos.text,
-        'cedula': cedula.text,
-        correo: correo.text,
-        contrasena: contrasena.text);
-    Map<String, dynamic> usrjson = temp.toJson();
-    var temp2 = json.encode(usrjson);
-    var response = await http.post(url, body: temp2);
+    final body = json.encode({
+      "nombre": nombres.text,
+      "apellido": apellidos.text,
+      "cedula": cedula.text,
+      "correo": correo.text,
+      "contrasena": contrasena.text,
+    });
 
-    var nojson = json.decode(response.body);
-    if (nojson['mensaje'] == 'guardado!') {
-      print("Se guardó en la base de datos");
+    final response = await http.post(
+      Uri.parse(url),
+      headers: headers,
+      body: body,
+    );
+
+    var data = json.decode(response.body);
+
+    print(data);
+
+    if (data['message'] == 'Usuario creado exitosamente') {
+      nombres.clear();
+      apellidos.clear();
+      cedula.clear();
+      correo.clear();
+      contrasena.clear();
+
+      Fluttertoast.showToast(
+          msg: '¡ Usuario creado exitosamente !',
+          backgroundColor: Colors.green,
+          textColor: Colors.white,
+          toastLength: Toast.LENGTH_LONG);
     } else {
-      if (nojson['mensaje'] == 'Este correo ya esta registrado') {
-        print("El correo ya existe");
+      if (response.statusCode == 500) {
+        correo.clear();
+        Fluttertoast.showToast(
+            msg: '¡ El correo escrito ya existe !',
+            backgroundColor: Colors.green,
+            textColor: Colors.white,
+            toastLength: Toast.LENGTH_LONG);
+      } else {
+        Fluttertoast.showToast(
+            msg: '¡ Error desconocido !',
+            backgroundColor: Colors.green,
+            textColor: Colors.white,
+            toastLength: Toast.LENGTH_LONG);
       }
     }
-  } */
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -101,8 +133,10 @@ class _RegistroUsuariosState extends State<registro_usuarios> {
               padding: const EdgeInsets.only(left: 30),
               child: TextButton(
                 onPressed: () {
-                  // Acción cuando se presiona "Iniciar Sesión"
-                  Navigator.pushNamed(context, '/ingreso');
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => IngresoUsuarios()),
+                  );
                 },
                 child: const Text('Iniciar Sesión',
                     style: TextStyle(
@@ -330,7 +364,7 @@ class _RegistroUsuariosState extends State<registro_usuarios> {
                         padding: const EdgeInsets.only(top: 80),
                         child: GestureDetector(
                           onTap: () {
-                            //creaeUsuario();
+                            crearUsuario();
                           },
                           child: Container(
                               height: 60,

@@ -1,9 +1,10 @@
 // ignore_for_file: camel_case_types, sized_box_for_whitespace, prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
+import 'package:frontend/layout/ingreso_usuarios.dart';
 
-class pagina_principal extends StatelessWidget {
-  const pagina_principal({Key? key}) : super(key: key);
+class PaginaPrincipal extends StatelessWidget {
+  const PaginaPrincipal({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -27,10 +28,7 @@ class pagina_principal extends StatelessWidget {
         elevation: 1,
         actions: [
           TextButton(
-            onPressed: () {
-              // Acción cuando se presiona "Home"
-              Navigator.pushNamed(context, '/');
-            },
+            onPressed: () {},
             child: const Text(
               'Home',
               style: TextStyle(
@@ -61,8 +59,10 @@ class pagina_principal extends StatelessWidget {
             padding: const EdgeInsets.only(left: 30),
             child: TextButton(
               onPressed: () {
-                // Acción cuando se presiona "Iniciar Sesión"
-                Navigator.pushNamed(context, '/ingreso');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => IngresoUsuarios()),
+                );
               },
               child: const Text('Iniciar Sesión',
                   style: TextStyle(

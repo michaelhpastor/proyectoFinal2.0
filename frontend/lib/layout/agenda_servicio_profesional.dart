@@ -1,4 +1,4 @@
-// ignore_for_file: camel_case_types, library_private_types_in_public_api, prefer_typing_uninitialized_variables, prefer_const_constructors, sized_box_for_whitespace
+// ignore_for_file: camel_case_types, library_private_types_in_public_api, prefer_typing_uninitialized_variables, prefer_const_constructors, sized_box_for_whitespace, non_constant_identifier_names
 
 import 'dart:convert';
 
@@ -8,20 +8,24 @@ import 'package:frontend/layout/ingreso_usuarios.dart';
 import 'package:http/http.dart' as http;
 import 'package:fluttertoast/fluttertoast.dart';
 
-class AgendaServicio extends StatefulWidget {
-  final id_empleado;
+class AgendaServicioProfesional extends StatefulWidget {
+  final id_profesional;
   final id_usuario;
-  const AgendaServicio(
-      {Key? key, required this.id_empleado, required this.id_usuario})
+
+  const AgendaServicioProfesional(
+      {Key? key, required this.id_profesional, required this.id_usuario})
       : super(key: key);
 
   @override
-  _AgendaServicioState createState() => _AgendaServicioState();
+  _AgendaServicioProfesionalState createState() =>
+      _AgendaServicioProfesionalState();
 }
 
-class _AgendaServicioState extends State<AgendaServicio> {
+class _AgendaServicioProfesionalState extends State<AgendaServicioProfesional> {
   TextEditingController fecha = TextEditingController();
   TextEditingController hora = TextEditingController();
+  TextEditingController lugar = TextEditingController();
+
   String? selectedService = ''; // Para almacenar el servicio seleccionado
   DateTime selectedDate =
       DateTime.now(); // Para almacenar la fecha seleccionada
@@ -31,16 +35,20 @@ class _AgendaServicioState extends State<AgendaServicio> {
   String? selectedCategory = '';
 
   Future crearAgenda() async {
-    var idEmpleado = widget.id_empleado;
+    var idProfesional = widget.id_profesional;
     var idUsuario = widget.id_usuario;
     final url =
-        'https://flaskprueba-fb9845ade83c.herokuapp.com/agendaEmpleados/$idEmpleado/$idUsuario';
+        'https://flaskprueba-fb9845ade83c.herokuapp.com/agendaEspecialista/$idProfesional/$idUsuario';
     final headers = {
       "Content-Type": "application/json",
     };
 
-    final body = json.encode(
-        {"fecha": fecha.text, "hora": hora.text, 'servicio': selectedService});
+    final body = json.encode({
+      "fecha": fecha.text,
+      "hora": hora.text,
+      "lugar": lugar.text,
+      'servicio': selectedService
+    });
 
     final response = await http.post(
       Uri.parse(url),
@@ -52,9 +60,10 @@ class _AgendaServicioState extends State<AgendaServicio> {
     print("DATA DE AGENDA:");
     print(data);
 
-    if (data['message'] == 'La agenda de empleados creada exitosamente') {
+    if (data['message'] == 'La agenda del especialista creada exitosamente') {
       fecha.clear();
       hora.clear();
+      lugar.clear();
 
       Fluttertoast.showToast(
           msg: '¡ Reserva creada exitosamente !',
@@ -69,8 +78,8 @@ class _AgendaServicioState extends State<AgendaServicio> {
 
   @override
   Widget build(BuildContext context) {
-    print("AGENDA: VALOR ID_EMPLEADO");
-    print(widget.id_empleado);
+    print("AGENDA: VALOR ID_PROFESIONAL");
+    print(widget.id_profesional);
 
     print("AGENDA: VALOR ID_USUARIO");
     print(widget.id_usuario);
@@ -269,16 +278,51 @@ class _AgendaServicioState extends State<AgendaServicio> {
             ),
 
             Padding(
-              padding: const EdgeInsets.only(top: 70, bottom: 40),
-              child: const Text('Selecciona el servicio que deseas reservar',
-                  style: TextStyle(
-                      fontFamily: 'Poppins',
-                      fontSize: 20,
-                      fontWeight: FontWeight.w700,
-                      color: Color(0xff393839))),
+              padding: EdgeInsets.only(top: 30),
+              child: Container(
+                width: 1060,
+                child: TextField(
+                  onTap: () async {
+                    /*     final TimeOfDay? pickedTime = await showTimePicker(
+                      context: context,
+                      initialTime: selectedTime,
+                    );
+
+                    if (pickedTime != null && pickedTime != selectedTime) {
+                      setState(() {
+                        selectedTime = pickedTime;
+                        hora.text = _formatTime(pickedTime);
+                      });
+                    } */
+                  },
+                  controller: lugar,
+                  style: TextStyle(fontSize: 16),
+                  decoration: const InputDecoration(
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                            color: Color.fromARGB(255, 218, 218, 218),
+                            width: 2.0),
+                      ),
+                      hintText: 'Escribir lugar',
+                      hintStyle: TextStyle(
+                          fontFamily: 'Poppins',
+                          fontWeight: FontWeight.w400,
+                          color: Color.fromARGB(255, 190, 190, 190),
+                          fontSize: 16),
+                      border: OutlineInputBorder(),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Color(
+                              0xff52369d), // Establece un color transparente para quitar el color azul
+                        ),
+                      ),
+                      floatingLabelBehavior: FloatingLabelBehavior.always),
+                ),
+              ),
             ),
+
             Padding(
-              padding: const EdgeInsets.only(left: 420, right: 420),
+              padding: const EdgeInsets.only(left: 420, right: 420, top: 50),
               child: Container(
                 height: 300, // Ajusta la altura según sea necesario
                 child: ListView.builder(

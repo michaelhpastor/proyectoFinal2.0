@@ -2,35 +2,31 @@
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:frontend/layout/agenda_servicio.dart';
+import 'package:frontend/layout/agenda_servicio_profesional.dart';
 import 'package:frontend/layout/eleccion_agenda.dart';
-import 'package:frontend/layout/ingreso_usuarios.dart';
-import 'package:frontend/layout/lista_establecimientos.dart';
+import 'package:frontend/layout/layout.dart';
+import 'package:frontend/layout/lista_empleados.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-class ListaEmpleados extends StatefulWidget {
-  final Establecimiento establecimiento;
+class ListaProfesionales extends StatefulWidget {
   final id_usuario;
-  const ListaEmpleados(
-      {Key? key, required this.establecimiento, required this.id_usuario})
+  const ListaProfesionales({Key? key, required this.id_usuario})
       : super(key: key);
 
   @override
-  _ListaEmpleadosState createState() => _ListaEmpleadosState();
+  _ListaProfesionalesState createState() => _ListaProfesionalesState();
 }
 
-class Empleado {
+class Profesional {
   final int id;
-  final int idEstablecimiento;
   final String nombre;
   final String apellido;
   final String imagen;
   final String horario;
 
-  Empleado({
+  Profesional({
     required this.id,
-    required this.idEstablecimiento,
     required this.nombre,
     required this.apellido,
     required this.imagen,
@@ -38,44 +34,33 @@ class Empleado {
   });
 }
 
-class _ListaEmpleadosState extends State<ListaEmpleados> {
-  Map<String, dynamic> toJson(int idEstablecimiento) {
-    return {
-      "idEstablecimiento": idEstablecimiento,
-    };
-  }
-
-  Future<List<Empleado>> get_empleados() async {
-    var temp = widget.establecimiento.id;
-    print("VAR TEMP XD:");
-    print(temp);
-
-    print("VAR ID USUARIO EN EMPLEADOS:");
-    print(widget.id_usuario);
+class _ListaProfesionalesState extends State<ListaProfesionales> {
+  Future get_profesional() async {
     var url =
-        Uri.https("flaskprueba-fb9845ade83c.herokuapp.com", '/empleados/$temp');
+        Uri.https("flaskprueba-fb9845ade83c.herokuapp.com", '/especialistas');
     final response = await http.get(url);
     var responseData = json.decode(response.body);
 
-    List<Empleado> establecimientos = [];
+    List<Profesional> profesionales = [];
     for (var singleUser in responseData) {
-      Empleado establecimiento = Empleado(
+      Profesional establecimiento = Profesional(
         id: singleUser['id'],
-        idEstablecimiento: singleUser['idEstablecimiento'],
         nombre: singleUser['nombre'],
         apellido: singleUser['apellido'],
         imagen: singleUser['imagen'],
         horario: singleUser['horario'],
       );
 
-      establecimientos.add(establecimiento);
+      profesionales.add(establecimiento);
     }
 
-    return establecimientos;
+    return profesionales;
   }
 
   @override
   Widget build(BuildContext context) {
+    print("VALOR ID USUARIO EN LITA PROFESIONALES");
+    print(widget.id_usuario);
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 100,
@@ -145,18 +130,18 @@ class _ListaEmpleadosState extends State<ListaEmpleados> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Padding(
-              padding: EdgeInsets.only(top: 70),
-              child: Text('Selecciona el empleado favorito:',
+              padding: EdgeInsets.only(top: 70, bottom: 40),
+              child: Text('Selecciona el profesional:',
                   style: TextStyle(
                       fontFamily: 'Poppins',
                       fontSize: 20,
-                      fontWeight: FontWeight.w700,
+                      fontWeight: FontWeight.bold,
                       color: Color(0xff393839))),
             ),
             Container(
               height: 700,
               child: FutureBuilder(
-                  future: get_empleados(),
+                  future: get_profesional(),
                   builder: (BuildContext ctx, AsyncSnapshot snapshot) {
                     if (snapshot.hasData) {
                       return ListView.builder(
@@ -164,9 +149,8 @@ class _ListaEmpleadosState extends State<ListaEmpleados> {
                         itemBuilder: (BuildContext context, int index) {
                           return InkWell(
                             onTap: () {
-                              _navigateToAgenda(snapshot.data[index].id);
-                              /*   _navigateToDetalleEstablecimiento(
-                                  snapshot.data[index]); */
+                              _navigateToAgendaProfesional(
+                                  snapshot.data[index].id);
                             },
                             child: Padding(
                               padding: const EdgeInsets.only(
@@ -233,19 +217,6 @@ class _ListaEmpleadosState extends State<ListaEmpleados> {
                           );
                         },
                       );
-                    } else if (snapshot.hasError) {
-                      return Text("Error: ${snapshot.error}");
-                    } else if (snapshot.hasData == "[]") {
-                      return Center(
-                          child: Text(
-                        "Lo sentimos, no hay usuarios disponibles",
-                        style: TextStyle(
-                          fontFamily: 'Poppins',
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400,
-                          color: Color(0xff393839),
-                        ),
-                      ));
                     } else {
                       return Transform.scale(
                         scale: 0.3,
@@ -260,12 +231,12 @@ class _ListaEmpleadosState extends State<ListaEmpleados> {
     );
   }
 
-  void _navigateToAgenda(int id_empleado) {
+  void _navigateToAgendaProfesional(int id_profesional) {
     Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) => AgendaServicio(
-                id_empleado: id_empleado,
+          builder: (context) => AgendaServicioProfesional(
+                id_profesional: id_profesional,
                 id_usuario: widget.id_usuario,
               )),
     );

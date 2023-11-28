@@ -2,28 +2,27 @@
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:frontend/layout/eleccion_agenda.dart';
 import 'package:frontend/layout/ingreso_usuarios.dart';
 import 'package:frontend/layout/lista_establecimientos.dart';
 import 'package:frontend/layout/lista_profesionales.dart';
+import 'package:frontend/layout/mis_reservas_establecimientos.dart';
+import 'package:frontend/layout/mis_reservas_profesionales.dart';
 
-class EleccionServicio extends StatefulWidget {
+class EleccionAgenda extends StatefulWidget {
   final id_usuario;
-  const EleccionServicio({super.key, required this.id_usuario});
+  const EleccionAgenda({super.key, required this.id_usuario});
 
   @override
-  State<EleccionServicio> createState() => _EleccionServicioState();
+  State<EleccionAgenda> createState() => _EleccionAgendaState();
 }
 
-class _EleccionServicioState extends State<EleccionServicio> {
-  int? _selectedCardIndex;
-
+class _EleccionAgendaState extends State<EleccionAgenda> {
   bool _isSelected = false;
   bool _isSelected2 = false;
 
   @override
   Widget build(BuildContext context) {
-    print("VALOR DE ID USUARIO EN VISTA ELECCION SERVICIO");
+    print("VALOR DE ID USUARIO EN VISTA ELECCION AGENDA");
     print(widget.id_usuario);
     return Scaffold(
       appBar: AppBar(
@@ -46,13 +45,8 @@ class _EleccionServicioState extends State<EleccionServicio> {
         actions: [
           TextButton(
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => EleccionAgenda(
-                          id_usuario: widget.id_usuario,
-                        )),
-              );
+              // Acción cuando se presiona "Home"
+              Navigator.pushNamed(context, '/');
             },
             child: const Text(
               'Mis reservas',
@@ -93,8 +87,7 @@ class _EleccionServicioState extends State<EleccionServicio> {
         child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
           Padding(
             padding: EdgeInsets.only(top: 70),
-            child: Text(
-                '¡Bienvenido¡ Por favor elija el tipo de servicio que quiere:',
+            child: Text('¡Bienvenido¡ Por favor elija que agenda quiere ver:',
                 style: TextStyle(
                     fontFamily: 'Poppins',
                     fontSize: 20,
@@ -110,23 +103,15 @@ class _EleccionServicioState extends State<EleccionServicio> {
                   padding: const EdgeInsets.only(left: 60),
                   child: GestureDetector(
                     onTap: () {
-                      // Deselecciona el card anterior si ya había uno seleccionado
-                      if (_selectedCardIndex != null) {
-                        setState(() {
-                          _selectedCardIndex = null;
-                        });
-                      } else {
-                        // Selecciona el card actual
-                        setState(() {
-                          _selectedCardIndex = 0;
-                        });
-                      }
+                      setState(() {
+                        _isSelected = !_isSelected;
+                      });
                     },
                     child: Card(
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                           side: BorderSide(
-                            color: _selectedCardIndex == 0
+                            color: _isSelected
                                 ? Color(0xff52369d)
                                 : Colors.transparent,
                             width: 3.0,
@@ -142,14 +127,14 @@ class _EleccionServicioState extends State<EleccionServicio> {
                                   width: 480,
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(10),
-                                    child: Image.asset(
+                                    child: Image.network(
                                         fit: BoxFit.cover,
-                                        "src/imagenes/profesional.jpg"),
+                                        "https://images.unsplash.com/photo-1685640206200-af0e9a82008f?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8c2NoZWR1bGUlMjBtYW58ZW58MHx8MHx8fDA%3D"),
                                   )),
                               Padding(
                                 padding: const EdgeInsets.only(top: 30),
                                 child: Text(
-                                  "Profesional",
+                                  "Agendas de Profesional",
                                   style: TextStyle(
                                       fontFamily: 'Poppins',
                                       fontSize: 16,
@@ -160,7 +145,7 @@ class _EleccionServicioState extends State<EleccionServicio> {
                               Container(
                                 width: 480,
                                 child: Text(
-                                  "Seleccione un profesional si quiere un servicio de Freelancer hasta su punto de encuentro.",
+                                  "Aquí encontrará todas sus agendas realizadas a algun profesional Freelancer",
                                   style: TextStyle(
                                       fontFamily: 'Poppins',
                                       fontSize: 16,
@@ -177,23 +162,15 @@ class _EleccionServicioState extends State<EleccionServicio> {
                   padding: const EdgeInsets.only(left: 60),
                   child: GestureDetector(
                     onTap: () {
-                      // Deselecciona el card anterior si ya había uno seleccionado
-                      if (_selectedCardIndex != null) {
-                        setState(() {
-                          _selectedCardIndex = null;
-                        });
-                      } else {
-                        // Selecciona el card actual
-                        setState(() {
-                          _selectedCardIndex = 1;
-                        });
-                      }
+                      setState(() {
+                        _isSelected2 = !_isSelected2;
+                      });
                     },
                     child: Card(
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                           side: BorderSide(
-                            color: _selectedCardIndex == 1
+                            color: _isSelected2
                                 ? Color(0xff52369d)
                                 : Colors.transparent,
                             width: 3.0,
@@ -209,14 +186,14 @@ class _EleccionServicioState extends State<EleccionServicio> {
                                   width: 480,
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(10),
-                                    child: Image.asset(
+                                    child: Image.network(
                                         fit: BoxFit.cover,
-                                        "src/imagenes/establecimiento.jpg"),
+                                        "https://images.unsplash.com/photo-1622296089863-eb7fc530daa8?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NDN8fGJhcmJlcnxlbnwwfHwwfHx8MA%3D%3D"),
                                   )),
                               Padding(
                                 padding: const EdgeInsets.only(top: 30),
                                 child: Text(
-                                  "Establecimiento",
+                                  "Agendas de Establecimiento",
                                   style: TextStyle(
                                       fontFamily: 'Poppins',
                                       fontSize: 16,
@@ -227,7 +204,7 @@ class _EleccionServicioState extends State<EleccionServicio> {
                               Container(
                                 width: 480,
                                 child: Text(
-                                  "Seleccione un establecimiento si se quiere desplazar hasta el lugar.",
+                                  "Aquí encontrará todas las reservas realizadas en su establecimiento de confianza.",
                                   style: TextStyle(
                                       fontFamily: 'Poppins',
                                       fontSize: 16,
@@ -245,23 +222,23 @@ class _EleccionServicioState extends State<EleccionServicio> {
           ),
           Padding(
               padding: const EdgeInsets.only(top: 60),
-              child: (_selectedCardIndex == 0 || _selectedCardIndex == 1)
+              child: (_isSelected == true || _isSelected2 == true)
                   ? GestureDetector(
                       onTap: () {
-                        if (_selectedCardIndex == 0) {
-                          print(_selectedCardIndex);
+                        if (_isSelected == true) {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => ListaProfesionales(
+                                builder: (context) => MisReservasProfesionales(
                                       id_usuario: widget.id_usuario,
                                     )),
                           );
-                        } else if (_selectedCardIndex == 1) {
+                        } else if (_isSelected2 == true) {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => ListaEstablecimientos(
+                                builder: (context) =>
+                                    MisReservasEstablecimientos(
                                       id_usuario: widget.id_usuario,
                                     )),
                           );

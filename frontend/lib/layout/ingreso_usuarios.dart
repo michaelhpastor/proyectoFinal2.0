@@ -1,24 +1,20 @@
-// ignore_for_file: camel_case_types, library_private_types_in_public_api, prefer_const_constructors, prefer_const_literals_to_create_immutables, sized_box_for_whitespace
+// ignore_for_file: camel_case_types, library_private_types_in_public_api, prefer_const_constructors, prefer_const_literals_to_create_immutables, sized_box_for_whitespace, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
 import 'package:frontend/layout/eleccion_servicio.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-class ingreso_usuarios extends StatefulWidget {
-  const ingreso_usuarios({Key? key}) : super(key: key);
+class IngresoUsuarios extends StatefulWidget {
+  const IngresoUsuarios({Key? key}) : super(key: key);
 
   @override
   _IngresoUsuariosState createState() => _IngresoUsuariosState();
 }
 
-class _IngresoUsuariosState extends State<ingreso_usuarios> {
-  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+class _IngresoUsuariosState extends State<IngresoUsuarios> {
   bool obscureText = true;
-  bool esCliente = false;
-  bool esProfesional = false;
 
   TextEditingController correo = TextEditingController();
   TextEditingController contrasena = TextEditingController();
@@ -49,7 +45,11 @@ class _IngresoUsuariosState extends State<ingreso_usuarios> {
           textColor: Colors.white,
           toastLength: Toast.LENGTH_SHORT);
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => EleccionServicio()));
+        context,
+        MaterialPageRoute(
+          builder: (context) => EleccionServicio(id_usuario: data['id']),
+        ),
+      );
     } else {
       Fluttertoast.showToast(
           msg: '¡ Usuario no encontrado  !',
@@ -256,60 +256,12 @@ class _IngresoUsuariosState extends State<ingreso_usuarios> {
                                   FloatingLabelBehavior.always),
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 30),
-                        child: Row(
-                          children: [
-                            Checkbox(
-                              activeColor: Color(0xff52369d),
-                              value: esCliente,
-                              onChanged: (bool? value) {
-                                setState(() {
-                                  esCliente = value ?? false;
-                                  esProfesional = false;
-                                });
-                              },
-                            ),
-                            const Text('Soy Cliente',
-                                style: TextStyle(
-                                    fontFamily: 'Poppins',
-                                    fontWeight: FontWeight.w400,
-                                    color: Color(0xff393839),
-                                    fontSize: 16)),
-                          ],
-                        ),
-                      ),
-                      Row(
-                        children: [
-                          Checkbox(
-                            value: esProfesional,
-                            activeColor: Color(0xff52369d),
-                            onChanged: (bool? value) {
-                              setState(() {
-                                esProfesional = value ?? false;
-                                esCliente = false;
-                              });
-                            },
-                          ),
-                          const Text('Soy Profesional',
-                              style: TextStyle(
-                                  fontFamily: 'Poppins',
-                                  fontWeight: FontWeight.w400,
-                                  color: Color(0xff393839),
-                                  fontSize: 16)),
-                        ],
-                      ),
                       const SizedBox(height: 20.0),
                       Padding(
                         padding: const EdgeInsets.only(top: 80),
                         child: GestureDetector(
                           onTap: () {
-                            if (esCliente) {
-                              login();
-                            } else if (esProfesional) {
-                              Navigator.pushNamed(
-                                  context, '/agenda_profesional');
-                            }
+                            login();
                           },
                           child: Container(
                               height: 60,
