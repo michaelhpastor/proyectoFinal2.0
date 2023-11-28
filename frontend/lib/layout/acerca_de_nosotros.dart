@@ -1,6 +1,7 @@
-// ignore_for_file: camel_case_types, prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_unnecessary_containers
+// ignore_for_file: camel_case_types, prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_unnecessary_containers, sized_box_for_whitespace
 
 import 'package:flutter/material.dart';
+import 'package:frontend/layout/ingreso_usuarios.dart';
 
 class acerca_de_nosotros extends StatelessWidget {
   const acerca_de_nosotros({Key? key}) : super(key: key);
@@ -61,8 +62,10 @@ class acerca_de_nosotros extends StatelessWidget {
             padding: const EdgeInsets.only(left: 30),
             child: TextButton(
               onPressed: () {
-                // Acción cuando se presiona "Iniciar Sesión"
-                Navigator.pushNamed(context, '/ingreso');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => IngresoUsuarios()),
+                );
               },
               child: const Text('Iniciar Sesión',
                   style: TextStyle(
@@ -95,7 +98,7 @@ class acerca_de_nosotros extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Padding(  
+            Padding(
               padding: EdgeInsets.only(top: 70),
               child: Text('Acerca de Just One Click',
                   style: TextStyle(

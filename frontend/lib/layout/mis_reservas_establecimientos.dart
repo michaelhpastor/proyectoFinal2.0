@@ -5,8 +5,6 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:frontend/layout/ingreso_usuarios.dart';
-import 'package:frontend/layout/lista_establecimientos.dart';
-import 'package:frontend/layout/lista_profesionales.dart';
 
 class MisReservasEstablecimientos extends StatefulWidget {
   final id_usuario;

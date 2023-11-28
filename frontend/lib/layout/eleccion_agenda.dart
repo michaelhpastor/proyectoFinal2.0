@@ -3,8 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:frontend/layout/ingreso_usuarios.dart';
-import 'package:frontend/layout/lista_establecimientos.dart';
-import 'package:frontend/layout/lista_profesionales.dart';
 import 'package:frontend/layout/mis_reservas_establecimientos.dart';
 import 'package:frontend/layout/mis_reservas_profesionales.dart';
 

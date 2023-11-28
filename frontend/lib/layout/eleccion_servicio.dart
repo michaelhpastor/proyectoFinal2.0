@@ -18,9 +18,6 @@ class EleccionServicio extends StatefulWidget {
 class _EleccionServicioState extends State<EleccionServicio> {
   int? _selectedCardIndex;
 
-  bool _isSelected = false;
-  bool _isSelected2 = false;
-
   @override
   Widget build(BuildContext context) {
     print("VALOR DE ID USUARIO EN VISTA ELECCION SERVICIO");

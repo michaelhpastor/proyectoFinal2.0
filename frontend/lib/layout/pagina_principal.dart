@@ -137,23 +137,32 @@ class PaginaPrincipal extends StatelessWidget {
                       child: Padding(
                         padding: const EdgeInsets.only(top: 100),
                         child: Center(
-                            child: Container(
-                                height: 70,
-                                width: 500,
-                                decoration: const BoxDecoration(
-                                  color: Color(0xff52369d),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10)),
-                                ),
-                                child: const Center(
-                                    child: Text(
-                                  "Solicita tu reserva aquí",
-                                  style: TextStyle(
-                                      fontFamily: 'Poppins',
-                                      fontSize: 25,
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.white),
-                                )))),
+                            child: GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => IngresoUsuarios()),
+                            );
+                          },
+                          child: Container(
+                              height: 70,
+                              width: 500,
+                              decoration: const BoxDecoration(
+                                color: Color(0xff52369d),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10)),
+                              ),
+                              child: const Center(
+                                  child: Text(
+                                "Solicita tu reserva aquí",
+                                style: TextStyle(
+                                    fontFamily: 'Poppins',
+                                    fontSize: 25,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white),
+                              ))),
+                        )),
                       ),
                     )
                   ],
